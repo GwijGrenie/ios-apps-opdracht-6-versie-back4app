@@ -1,22 +1,44 @@
-//
-//  AppDelegate.swift
-//  ios-apps-opdracht-6
-//
-//  Created by gebruiker on 27/10/2018.
-//  Copyright © 2018 gwij. All rights reserved.
-//
-
 import UIKit
+import Parse
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        let configuration = ParseClientConfiguration {
+            $0.applicationId = "A4xCVzO6E341AXWgIyhuT9LvG1t8TkAkf2nzJq6R";
+            $0.clientKey = "dgsaXJrDPIaga6ggjSGKA2jPxVHoOQ1FuKtdRIf8";
+            $0.server = "https://parseapi.back4app.com"
+        }
+        
+        Parse.initialize(with: configuration)
+        
+        saveInstallationObject()
+        
         return true
+    }
+    
+    func saveInstallationObject(){
+        guard let installation = PFInstallation.current() else {
+            return;
+        }
+        
+        installation.saveInBackground() {
+            (succes: Bool, error: Error?) in
+            if (succes) {
+                print("You have succesfully connected your app to Back4App1")
+            } else {
+                if let myError = error {
+                    print(myError.localizedDescription)
+                } else {
+                    print("Unkown error")
+                }
+            }
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
